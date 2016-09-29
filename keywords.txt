@@ -1,0 +1,16 @@
+#######################################
+# Syntax Coloring Map ArduinoDriver_RCD_24
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+ArduinoDriver_RCD_24	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+init	KEYWORD2
+setBrightness	KEYWORD2
