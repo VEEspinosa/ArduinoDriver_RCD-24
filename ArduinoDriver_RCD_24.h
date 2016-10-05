@@ -34,12 +34,17 @@ class ArduinoDriver_RCD_24 {
 						   
 		// Public Methods
 		void init();	// Initialize pins, set PWM frequency, adjust PWM resolution to 10bit
-		void setBrightness(uint16_t brightness); // Speed value serves as PWM dutycycle		
+		void setBrightness(int16_t brightness); // Speed value serves as PWM dutycycle	
+		void off();
+		void on();
 	
 	private:
 		// Pin assignments
 		uint8_t _pin;
 		uint16_t _freq;
+		uint8_t _res;
+		uint16_t _resMaxVal;
+		uint16_t _resMinVal;
 		
 };
 

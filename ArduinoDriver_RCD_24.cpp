@@ -29,12 +29,18 @@ ArduinoDriver_RCD_24::ArduinoDriver_RCD_24(uint8_t PWM) {
 	
    _pin = PWM;
    _freq = 200;
+   _res = 10;
+   _resMaxVal = pow(2,_res) - 1;
+   _resMinVal = 0;
 }
 
 ArduinoDriver_RCD_24::ArduinoDriver_RCD_24(uint8_t PWM, uint16_t freq) {
 	
    _pin = PWM;
    _freq = freq;
+   _res = 10;
+   _resMaxVal = pow(2,_res) - 1;
+   _resMinVal = 0;
 }
 
 void ArduinoDriver_RCD_24::init() {
@@ -45,22 +51,38 @@ void ArduinoDriver_RCD_24::init() {
 	analogWriteFrequency(_pin, _freq);
 	
 	// Set PWM dutycycle resolution to 10 bits, which is compatible with 72MHz Teensy
-	analogWriteResolution(10); // Max value is 1023
+	analogWriteResolution(_res); // Max value is 1023
 }
 
-void ArduinoDriver_RCD_24::setBrightness(uint16_t brightness) {
+void ArduinoDriver_RCD_24::setBrightness(int16_t brightness) {
+	// Braking doesn't care about direction, so we only care about magnitude of brake.
+	if (brightness < 0) {
+		brightness = -brightness;
+	}
 		
 	// Make sure that the value for brightness does not exceed the max dutycycle value of 1023
-	if (brightness > 1023) {
-		brightness = 1023;
+	if (brightness > _resMaxVal) {
+		brightness = _resMaxVal;
 	}
 	
-	brightness = 1023 - brightness; // RCD Module interprets low PWM dutycycle as high brightness
+	brightness = _resMaxVal - brightness; // RCD Module interprets low PWM dutycycle as high brightness
 									// Must invert brightness level so that when user sends
 									// low value for brightness, the LEDs are dim (normal op.)
 	
 	// Send PWM signal to VNH5019 using 10-bit dutycycle
 	analogWrite(_pin,brightness);
+}
+
+void ArduinoDriver_RCD_24::off() {
+	
+	// To turn off the LEDs, must hold control pin high
+	analogWrite(_pin,_resMaxVal);
+}
+
+void ArduinoDriver_RCD_24::on() {
+	
+	// To turn off the LEDs, must hold control pin high
+	analogWrite(_pin,_resMinVal);
 }
 
 
