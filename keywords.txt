@@ -14,3 +14,5 @@ ArduinoDriver_RCD_24	KEYWORD1
 
 init	KEYWORD2
 setBrightness	KEYWORD2
+on 	KEYWORD2
+off	KEYWORD2
